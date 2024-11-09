@@ -2,11 +2,13 @@
 #include <cstring>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <string>
 
 using namespace std;
 
 #define PORT 7
-#define SERVER_IP "127.0.0.1"
+#define SERVER_IP "127.16.40.1"
+#define BUFFER_SIZE 256
 
 int main() {
     int s = socket(AF_INET, SOCK_STREAM, 0);
@@ -39,13 +41,28 @@ int main() {
         return 1;
     }
 
-    char msg[] = "hellon";
-    cout << "Отправлено" << endl;
-    send(s, msg, sizeof(msg), 0);
+    
+    string message;
+    cout << "Введите сообщение: ";
+    getline(cin, message);
 
-    char buf[256];
-    memset(buf, 0, sizeof(buf)); 
-    recv(s, buf, sizeof(buf), 0);
+    
+    if (send(s, message.c_str(), message.length(), 0) == -1) {
+        cerr << "Ошибка отправки данных" << endl;
+        close(s);
+        return 1;
+    }
+    cout << "Сообщение отправлено" << endl;
+
+    
+    char buf[BUFFER_SIZE];
+    memset(buf, 0, BUFFER_SIZE);
+    
+    if (recv(s, buf, BUFFER_SIZE - 1, 0) == -1) {
+        cerr << "Ошибка получения данных" << endl;
+        close(s);
+        return 1;
+    }
     
     cout << "Ответ от сервера: " << buf << endl;
     
