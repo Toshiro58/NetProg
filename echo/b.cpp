@@ -7,7 +7,7 @@
 using namespace std;
 
 #define PORT 7
-#define SERVER_IP "127.16.40.1"
+#define SERVER_IP "172.16.40.1"
 #define BUFFER_SIZE 256
 
 int main() {
